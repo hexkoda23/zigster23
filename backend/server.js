@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const admin = require('firebase-admin');
 const { db } = require('./lib/firebase');
+const morgan = require('morgan');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
