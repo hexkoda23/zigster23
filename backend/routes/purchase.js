@@ -1,13 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const Purchase = require('../models/Purchase');
+const { db } = require('../lib/firebase');
+
+const purchasesRef = db.collection('purchases');
 
 // Create Purchase
 router.post('/', async (req, res) => {
     try {
-        const newPurchase = new Purchase(req.body);
-        const savedPurchase = await newPurchase.save();
-        res.status(201).json(savedPurchase);
+        const docRef = await purchasesRef.add({
+            ...req.body,
+            createdAt: new Date().toISOString()
+        });
+        const doc = await docRef.get();
+        res.status(201).json({ id: doc.id, ...doc.data() });
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
@@ -16,7 +21,8 @@ router.post('/', async (req, res) => {
 // Get All Purchases
 router.get('/', async (req, res) => {
     try {
-        const purchases = await Purchase.find();
+        const snapshot = await purchasesRef.get();
+        const purchases = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         res.json(purchases);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -26,7 +32,8 @@ router.get('/', async (req, res) => {
 // Get Purchases by Registry ID
 router.get('/registry/:registryId', async (req, res) => {
     try {
-        const purchases = await Purchase.find({ registryId: req.params.registryId });
+        const snapshot = await purchasesRef.where('registryId', '==', req.params.registryId).get();
+        const purchases = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         res.json(purchases);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -36,12 +43,10 @@ router.get('/registry/:registryId', async (req, res) => {
 // Confirm Purchase Status
 router.patch('/:id/confirm', async (req, res) => {
     try {
-        const updatedPurchase = await Purchase.findByIdAndUpdate(
-            req.params.id,
-            { status: 'Confirmed' },
-            { new: true }
-        );
-        res.json(updatedPurchase);
+        const purchaseDoc = purchasesRef.doc(req.params.id);
+        await purchaseDoc.update({ status: 'Confirmed' });
+        const updated = await purchaseDoc.get();
+        res.json({ id: updated.id, ...updated.data() });
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
