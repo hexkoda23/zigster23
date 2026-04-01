@@ -122,20 +122,21 @@ export default function GiftList() {
 
     return (
         <section className="space-y-8">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-6">
                 <div className="flex-1 w-full max-w-md bg-white border border-border flex items-center px-6 py-3 rounded-sm group hover:border-primary/30 transition-all">
                     <Search size={16} className="text-muted-foreground group-hover:text-primary transition-colors" />
                     <input type="text" placeholder="SEARCH GIFTS..." value={search} onChange={e => setSearch(e.target.value)}
                         className="bg-transparent border-none outline-none text-[10px] font-bold uppercase tracking-widest text-foreground ml-4 w-full" />
                 </div>
-                <div className="flex bg-secondary/30 p-1 rounded-sm border border-border">
+                <div className="flex bg-secondary/30 p-1 rounded-sm border border-border overflow-x-auto no-scrollbar">
                     {["all", "available", "purchased", "reserved"].map(f => (
-                        <button key={f} onClick={() => setFilter(f)} className={`px-6 py-2 text-[9px] font-bold uppercase tracking-widest transition-all whitespace-nowrap ${filter === f ? "bg-primary text-white shadow-sm" : "text-muted-foreground hover:text-foreground"}`}>{f}</button>
+                        <button key={f} onClick={() => setFilter(f)} className={`flex-1 md:flex-none px-4 md:px-6 py-2 text-[9px] font-bold uppercase tracking-widest transition-all whitespace-nowrap ${filter === f ? "bg-primary text-white shadow-sm" : "text-muted-foreground hover:text-foreground"}`}>{f}</button>
                     ))}
                 </div>
             </div>
 
-            <div className="glass overflow-hidden border-border">
+            {/* Desktop Table */}
+            <div className="hidden lg:block glass overflow-hidden border-border">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
@@ -201,17 +202,7 @@ export default function GiftList() {
                             )) : (
                                 <tr>
                                     <td colSpan={5} className="px-8 py-24 text-center">
-                                        <div className="space-y-4 max-w-xs mx-auto">
-                                            <div className="w-16 h-16 bg-secondary/30 rounded-full flex items-center justify-center text-primary/20 mx-auto">
-                                                <ShoppingBag size={32} />
-                                            </div>
-                                            <p className="text-sm font-serif font-bold text-foreground uppercase tracking-tight">
-                                                {filter === "all" ? "No gifts yet" : `No ${filter} gifts`}
-                                            </p>
-                                            <p className="text-[10px] text-muted-foreground uppercase tracking-widest">
-                                                {filter === "all" ? "Paste a product URL in your registry wizard to add gifts." : `No gifts with status "${filter}" found.`}
-                                            </p>
-                                        </div>
+                                        <EmptyState filter={filter} />
                                     </td>
                                 </tr>
                             )}
@@ -220,11 +211,79 @@ export default function GiftList() {
                 </div>
             </div>
 
+            {/* Mobile Card List */}
+            <div className="lg:hidden space-y-4">
+                {filteredGifts.length > 0 ? filteredGifts.map((gift, i) => (
+                    <div key={gift.id || i} className="glass p-5 border-border space-y-4">
+                        <div className="flex items-start gap-4">
+                            <div className="w-16 h-16 bg-secondary/50 border border-border flex items-center justify-center shrink-0">
+                                {gift.image ? <img src={gift.image} alt="" className="w-full h-full object-cover" /> : <Package size={24} className="text-muted-foreground" />}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <div className="flex justify-between items-start">
+                                    <p className="text-xs font-bold text-foreground uppercase tracking-tight truncate pr-2">{gift.name}</p>
+                                    <StatusBadge status={gift.status} />
+                                </div>
+                                <p className="text-[9px] text-muted-foreground uppercase tracking-widest mt-1">{gift.category || "General"}</p>
+                                <div className="mt-3 flex items-baseline gap-2">
+                                    <p className="text-lg font-serif font-bold text-primary">{gift.price}</p>
+                                    <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">@ {gift.store || "STORE"}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex gap-2 pt-2">
+                            <button
+                                onClick={() => copyGiftLink(gift.id)}
+                                className="flex-1 flex items-center justify-center gap-2 text-[9px] font-bold uppercase tracking-widest border border-border py-3 hover:bg-secondary transition-all text-foreground"
+                            >
+                                {copiedId === gift.id ? <CheckCheck size={12} className="text-emerald-500" /> : <Copy size={12} />}
+                                {copiedId === gift.id ? "COPIED" : "LINK"}
+                            </button>
+                            {gift.url && (
+                                <a href={gift.url} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-2 text-[9px] font-bold uppercase tracking-widest border border-border py-3 hover:bg-secondary transition-all text-foreground">
+                                    <ExternalLink size={12} /> STORE
+                                </a>
+                            )}
+                            <button onClick={() => deleteGift(gift.id)} className="px-4 border border-border text-muted-foreground hover:text-red-500 transition-colors">
+                                <MoreVertical size={14} />
+                            </button>
+                        </div>
+                    </div>
+                )) : (
+                    <div className="glass p-12 text-center">
+                        <EmptyState filter={filter} />
+                    </div>
+                )}
+            </div>
+
             <AnimatePresence>
                 {partPayGift && (
                     <PartPayModal gift={partPayGift} bankDetails={bankDetails} onClose={() => setPartPayGift(null)} />
                 )}
             </AnimatePresence>
         </section>
+    );
+}
+
+function StatusBadge({ status }: { status: string }) {
+    const s = (status || "available").toLowerCase();
+    if (s === "purchased") return <span className="text-[8px] font-bold text-emerald-500 uppercase tracking-widest flex items-center gap-1 shrink-0"><CheckCircle2 size={8} /> PAID</span>;
+    if (s === "reserved") return <span className="text-[8px] font-bold text-amber-500 uppercase tracking-widest flex items-center gap-1 shrink-0"><Clock size={8} /> HELD</span>;
+    return <span className="text-[8px] font-bold text-primary uppercase tracking-widest flex items-center gap-1 shrink-0"><Plus size={8} /> OPEN</span>;
+}
+
+function EmptyState({ filter }: { filter: string }) {
+    return (
+        <div className="space-y-4 max-w-xs mx-auto">
+            <div className="w-16 h-16 bg-secondary/30 rounded-full flex items-center justify-center text-primary/20 mx-auto">
+                <ShoppingBag size={32} />
+            </div>
+            <p className="text-sm font-serif font-bold text-foreground uppercase tracking-tight">
+                {filter === "all" ? "No gifts yet" : `No ${filter} gifts`}
+            </p>
+            <p className="text-[10px] text-muted-foreground uppercase tracking-widest leading-relaxed">
+                {filter === "all" ? "Paste a product URL in your registry wizard to add gifts." : `No gifts with status "${filter}" found.`}
+            </p>
+        </div>
     );
 }

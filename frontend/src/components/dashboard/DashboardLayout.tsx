@@ -2,10 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
-import { Menu, Search, Bell, User } from "lucide-react";
+import { Menu, Search, Bell, User, X } from "lucide-react";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const [name, setName] = useState("USER");
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     useEffect(() => {
         const registry = localStorage.getItem("zigster_registry");
@@ -21,15 +22,26 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
     return (
         <div className="flex bg-background min-h-screen text-foreground font-sans overflow-hidden">
+            {/* Mobile Backdrop */}
+            {isMobileMenuOpen && (
+                <div
+                    className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                />
+            )}
+
             {/* Sidebar */}
-            <Sidebar />
+            <Sidebar isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
 
             {/* Main Content */}
             <div className="flex-1 flex flex-col h-screen overflow-hidden">
                 {/* Header */}
-                <header className="h-20 border-b border-border flex items-center justify-between px-8 bg-white z-20">
+                <header className="h-20 border-b border-border flex items-center justify-between px-6 lg:px-8 bg-white z-20">
                     <div className="flex items-center gap-4 lg:hidden">
-                        <button className="text-foreground hover:text-primary transition-colors">
+                        <button
+                            onClick={() => setIsMobileMenuOpen(true)}
+                            className="text-foreground hover:text-primary transition-colors p-2"
+                        >
                             <Menu size={24} />
                         </button>
                         <span className="text-xl font-serif font-bold tracking-tight text-foreground uppercase">Z23</span>
@@ -44,18 +56,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         />
                     </div>
 
-                    <div className="flex items-center gap-6">
-                        <button className="relative text-muted-foreground hover:text-primary transition-colors">
+                    <div className="flex items-center gap-4 lg:gap-6">
+                        <button className="relative text-muted-foreground hover:text-primary transition-colors p-2 md:p-0">
                             <Bell size={20} />
-                            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-primary rounded-full border-2 border-white" />
+                            <span className="absolute top-1 right-1 md:-top-1 md:-right-1 w-2.5 h-2.5 bg-primary rounded-full border-2 border-white" />
                         </button>
-                        <div className="h-8 w-[1px] bg-border" />
+                        <div className="h-8 w-[1px] bg-border hidden md:block" />
                         <div className="flex items-center gap-3 group cursor-pointer">
                             <div className="text-right hidden sm:block">
                                 <p className="text-[10px] font-bold text-foreground uppercase tracking-widest">{name}</p>
                                 <p className="text-[9px] font-bold text-primary uppercase tracking-[0.2em] opacity-60">REGISTRY OWNER</p>
                             </div>
-                            <div className="w-10 h-10 bg-secondary border border-border flex items-center justify-center rounded-full group-hover:border-primary/50 transition-all duration-500 overflow-hidden">
+                            <div className="w-9 h-9 md:w-10 md:h-10 bg-secondary border border-border flex items-center justify-center rounded-full group-hover:border-primary/50 transition-all duration-500 overflow-hidden">
                                 <User size={20} className="text-muted-foreground group-hover:text-primary transition-colors" />
                             </div>
                         </div>
@@ -63,7 +75,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </header>
 
                 {/* Dashboard Grid / Content Area */}
-                <main className="flex-1 overflow-y-auto bg-background p-8 lg:p-12">
+                <main className="flex-1 overflow-y-auto bg-background p-6 md:p-8 lg:p-12">
                     {children}
                 </main>
             </div>

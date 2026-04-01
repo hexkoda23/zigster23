@@ -102,30 +102,30 @@ export default function SettingsTab() {
     ];
 
     return (
-        <section className="space-y-12">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                {/* Sidebar Nav */}
-                <div className="lg:col-span-4 space-y-2">
+        <section className="space-y-8 md:space-y-12">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+                {/* Sidebar Nav / Mobile Tabs */}
+                <div className="lg:col-span-4 flex lg:flex-col gap-2 overflow-x-auto no-scrollbar pb-2 lg:pb-0">
                     {navItems.map((item) => (
                         <button
                             key={item.id}
                             onClick={() => setActiveTab(item.id)}
-                            className={`w-full flex items-center gap-4 px-6 py-5 rounded-sm transition-all duration-300 group ${activeTab === item.id ? "bg-primary text-white font-bold shadow-lg shadow-primary/10" : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"}`}
+                            className={`flex flex-none items-center gap-4 px-4 lg:px-6 py-4 lg:py-5 rounded-sm transition-all duration-300 group whitespace-nowrap lg:whitespace-normal ${activeTab === item.id ? "bg-primary text-white font-bold shadow-lg shadow-primary/10" : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"}`}
                         >
                             <item.icon size={18} className={activeTab === item.id ? "" : "text-primary group-hover:text-primary/70"} />
-                            <span className="text-xs font-sans uppercase tracking-[0.2em]">{item.label}</span>
-                            <ChevronRight size={14} className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <span className="text-[10px] lg:text-xs font-sans uppercase tracking-[0.2em]">{item.label}</span>
+                            <ChevronRight size={14} className="ml-auto opacity-0 lg:group-hover:opacity-100 transition-opacity hidden lg:block" />
                         </button>
                     ))}
                 </div>
 
                 {/* Content */}
-                <div className="lg:col-span-8 space-y-8">
+                <div className="lg:col-span-8 space-y-6 md:space-y-8">
                     {/* REGISTRY PROFILE */}
                     {activeTab === "registry" && (
-                        <div className="glass p-10 border-border space-y-8">
+                        <div className="glass p-6 md:p-10 border-border space-y-6 md:space-y-8">
                             <div>
-                                <h3 className="text-xl font-serif font-bold text-foreground uppercase">Registry Profile</h3>
+                                <h3 className="text-lg md:text-xl font-serif font-bold text-foreground uppercase">Registry Profile</h3>
                                 <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-1">Update your public registry title and details.</p>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -161,9 +161,9 @@ export default function SettingsTab() {
                     {/* PAYMENT SETTINGS */}
                     {activeTab === "payment" && (
                         <div className="space-y-6">
-                            <div className="glass p-10 border-border space-y-8">
+                            <div className="glass p-6 md:p-10 border-border space-y-6 md:space-y-8">
                                 <div>
-                                    <h3 className="text-xl font-serif font-bold text-foreground uppercase flex items-center gap-3"><Building2 size={20} className="text-primary" /> Bank Account Details</h3>
+                                    <h3 className="text-lg md:text-xl font-serif font-bold text-foreground uppercase flex items-center gap-3"><Building2 size={20} className="text-primary" /> Bank Account Details</h3>
                                     <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-1">Your guests will transfer gift payments to this account.</p>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -202,9 +202,9 @@ export default function SettingsTab() {
                                 )}
                             </div>
 
-                            <div className="glass p-10 border-border space-y-8">
+                            <div className="glass p-6 md:p-10 border-border space-y-6 md:space-y-8">
                                 <div>
-                                    <h3 className="text-xl font-serif font-bold text-foreground uppercase flex items-center gap-3"><MapPin size={20} className="text-primary" /> Delivery Address</h3>
+                                    <h3 className="text-lg md:text-xl font-serif font-bold text-foreground uppercase flex items-center gap-3"><MapPin size={20} className="text-primary" /> Delivery Address</h3>
                                     <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-1">Guests who purchase gifts will deliver to this address.</p>
                                 </div>
                                 <SettingField label="Full Delivery Address">
@@ -223,9 +223,9 @@ export default function SettingsTab() {
 
                     {/* PRIVACY */}
                     {activeTab === "privacy" && (
-                        <div className="glass p-10 border-border space-y-8">
+                        <div className="glass p-6 md:p-10 border-border space-y-6 md:space-y-8">
                             <div>
-                                <h3 className="text-xl font-serif font-bold text-foreground uppercase">Privacy & Security</h3>
+                                <h3 className="text-lg md:text-xl font-serif font-bold text-foreground uppercase">Privacy & Security</h3>
                                 <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-1">Control who can see your registry.</p>
                             </div>
                             <div className="space-y-6">
@@ -238,9 +238,9 @@ export default function SettingsTab() {
 
                     {/* NOTIFICATIONS */}
                     {activeTab === "notifications" && (
-                        <div className="glass p-10 border-border space-y-8">
+                        <div className="glass p-6 md:p-10 border-border space-y-6 md:space-y-8">
                             <div>
-                                <h3 className="text-xl font-serif font-bold text-foreground uppercase">Notifications</h3>
+                                <h3 className="text-lg md:text-xl font-serif font-bold text-foreground uppercase">Notifications</h3>
                                 <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-1">Choose how you get notified about purchases.</p>
                             </div>
                             <div className="space-y-6">
@@ -254,9 +254,9 @@ export default function SettingsTab() {
 
                     {/* CO-OWNER ACCESS */}
                     {activeTab === "access" && (
-                        <div className="glass p-10 border-border space-y-8">
+                        <div className="glass p-6 md:p-10 border-border space-y-6 md:space-y-8">
                             <div>
-                                <h3 className="text-xl font-serif font-bold text-foreground uppercase">Co-Owner Access</h3>
+                                <h3 className="text-lg md:text-xl font-serif font-bold text-foreground uppercase">Co-Owner Access</h3>
                                 <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-1">Invite a partner to co-manage your registry.</p>
                             </div>
                             <div className="space-y-4">
@@ -285,10 +285,10 @@ export default function SettingsTab() {
                     )}
 
                     {/* Danger Zone */}
-                    <div className="bg-red-500/5 p-10 border border-red-500/10 space-y-6">
+                    <div className="bg-red-500/5 p-6 md:p-10 border border-red-500/10 space-y-6">
                         <div className="flex items-center gap-4 text-red-500">
                             <Shield size={20} />
-                            <h3 className="text-sm font-serif font-bold uppercase">DANGER ZONE</h3>
+                            <h3 className="text-xs md:text-sm font-serif font-bold uppercase tracking-tight">DANGER ZONE</h3>
                         </div>
                         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
                             <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest leading-relaxed">

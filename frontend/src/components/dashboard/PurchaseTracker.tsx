@@ -4,6 +4,23 @@ import React, { useEffect, useState } from "react";
 import { Search, Download, MessageCircle, CheckCircle2, Clock, Package, ShoppingCart, Eye, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
+function StatusBadge({ status }: { status: string }) {
+    if (status === "Confirmed") return <span className="text-[8px] font-bold text-emerald-500 uppercase tracking-widest flex items-center gap-1 shrink-0 bg-emerald-500/5 px-2 py-1 border border-emerald-500/20"><CheckCircle2 size={10} /> Confirmed</span>;
+    return <span className="text-[8px] font-bold text-amber-500 uppercase tracking-widest flex items-center gap-1 shrink-0 bg-amber-500/5 px-2 py-1 border border-amber-500/20"><Clock size={10} /> Pending</span>;
+}
+
+function EmptyPurchases() {
+    return (
+        <div className="space-y-3 max-w-xs mx-auto">
+            <div className="w-16 h-16 bg-secondary/30 rounded-full flex items-center justify-center text-primary/20 mx-auto">
+                <ShoppingCart size={32} />
+            </div>
+            <p className="text-sm font-serif font-bold text-foreground uppercase tracking-tight">No purchases yet</p>
+            <p className="text-[10px] text-muted-foreground uppercase tracking-widest leading-relaxed">When guests buy gifts or contribute via your registry link, they appear here.</p>
+        </div>
+    );
+}
+
 function ReceiptModal({ purchase, onClose, onConfirm }: { purchase: any; onClose: () => void; onConfirm: () => void }) {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm" onClick={onClose}>
@@ -127,20 +144,21 @@ export default function PurchaseTracker() {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {[
                     { label: "Total Purchases", value: purchases.length, color: "text-foreground" },
                     { label: "Confirmed", value: purchases.filter(p => p.status === "Confirmed").length, color: "text-emerald-500" },
                     { label: "Pending Review", value: purchases.filter(p => p.status !== "Confirmed").length, color: "text-amber-500" },
                 ].map(s => (
-                    <div key={s.label} className="glass p-6 border-border text-center">
-                        <p className={`text-3xl font-serif font-bold ${s.color}`}>{s.value}</p>
+                    <div key={s.label} className="glass p-5 md:p-6 border-border text-center">
+                        <p className={`text-2xl md:text-3xl font-serif font-bold ${s.color}`}>{s.value}</p>
                         <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mt-1">{s.label}</p>
                     </div>
                 ))}
             </div>
 
-            <div className="glass overflow-hidden border-border">
+            {/* Desktop Table */}
+            <div className="hidden lg:block glass overflow-hidden border-border">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
@@ -171,11 +189,7 @@ export default function PurchaseTracker() {
                                         <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{p.date}</p>
                                     </td>
                                     <td className="px-6 py-5">
-                                        {p.status === "Confirmed" ? (
-                                            <span className="text-[9px] font-bold text-emerald-500 uppercase flex items-center gap-1"><CheckCircle2 size={10} /> Confirmed</span>
-                                        ) : (
-                                            <span className="text-[9px] font-bold text-amber-500 uppercase flex items-center gap-1"><Clock size={10} /> Pending</span>
-                                        )}
+                                        <StatusBadge status={p.status} />
                                     </td>
                                     <td className="px-6 py-5">
                                         <div className="flex items-center gap-3">
@@ -191,19 +205,50 @@ export default function PurchaseTracker() {
                             )) : (
                                 <tr>
                                     <td colSpan={7} className="px-8 py-24 text-center">
-                                        <div className="space-y-3 max-w-xs mx-auto">
-                                            <div className="w-16 h-16 bg-secondary/30 rounded-full flex items-center justify-center text-primary/20 mx-auto">
-                                                <ShoppingCart size={32} />
-                                            </div>
-                                            <p className="text-sm font-serif font-bold text-foreground uppercase tracking-tight">No purchases yet</p>
-                                            <p className="text-[10px] text-muted-foreground uppercase tracking-widest">When guests buy gifts or contribute via your registry link, they appear here.</p>
-                                        </div>
+                                        <EmptyPurchases />
                                     </td>
                                 </tr>
                             )}
                         </tbody>
                     </table>
                 </div>
+            </div>
+
+            {/* Mobile Card List */}
+            <div className="lg:hidden space-y-4">
+                {filtered.length > 0 ? filtered.map((p, i) => (
+                    <div key={p.id || i} className="glass p-5 border-border space-y-4">
+                        <div className="flex justify-between items-start">
+                            <div className="space-y-1">
+                                <p className="text-xs font-bold text-foreground uppercase tracking-tight">{p.guestName || "Anonymous"}</p>
+                                <p className="text-[9px] text-muted-foreground uppercase tracking-widest">{p.guestWhatsapp || "No WhatsApp"}</p>
+                            </div>
+                            <StatusBadge status={p.status} />
+                        </div>
+                        <div className="bg-secondary/30 border border-border p-3 flex justify-between items-center">
+                            <div className="min-w-0 flex-1">
+                                <p className="text-[10px] font-bold text-foreground uppercase tracking-tight truncate pr-4">{p.giftName}</p>
+                                <p className="text-[8px] text-muted-foreground uppercase tracking-widest mt-0.5">{p.paymentRef}</p>
+                            </div>
+                            <p className="text-base font-serif font-bold text-primary shrink-0">{p.amount}</p>
+                        </div>
+                        <div className="flex justify-between items-center pt-2">
+                            <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">{p.date}</p>
+                            <div className="flex items-center gap-4">
+                                <button onClick={() => setViewPurchase(p)} className="flex items-center gap-1.5 text-[9px] font-bold text-primary uppercase tracking-widest">
+                                    <Eye size={12} /> DETAILS
+                                </button>
+                                <button onClick={() => sendWhatsApp(p)} className="flex items-center gap-1.5 text-[9px] font-bold text-[#25D366] uppercase tracking-widest">
+                                    <MessageCircle size={12} /> THANKS
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )) : (
+                    <div className="glass p-12 text-center">
+                        <EmptyPurchases />
+                    </div>
+                )}
             </div>
 
             <AnimatePresence>
@@ -214,3 +259,4 @@ export default function PurchaseTracker() {
         </section>
     );
 }
+

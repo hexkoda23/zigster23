@@ -13,7 +13,8 @@ import {
     Share2,
     Settings,
     LogOut,
-    ChevronRight
+    ChevronRight,
+    X
 } from "lucide-react";
 
 const navItems = [
@@ -26,7 +27,7 @@ const navItems = [
     { id: "settings", label: "Settings", icon: Settings, href: "/dashboard/settings" },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen, onClose }: { isOpen?: boolean; onClose?: () => void }) {
     const pathname = usePathname();
     const router = useRouter();
     const [registryInfo, setRegistryInfo] = useState({ title: "YOUR REGISTRY", occasion: "Your Event • Date TBA" });
@@ -50,7 +51,18 @@ export default function Sidebar() {
 
 
     return (
-        <aside className="w-80 h-screen sticky top-0 bg-white border-r border-border flex flex-col pt-12 pb-8 overflow-y-auto hidden lg:flex">
+        <aside className={`
+            fixed inset-y-0 left-0 z-50 w-80 bg-white border-r border-border flex flex-col pt-12 pb-8 overflow-y-auto transition-transform duration-300 lg:translate-x-0 lg:static lg:h-screen
+            ${isOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full lg:flex"}
+        `}>
+            {/* Mobile Close Button */}
+            <button
+                onClick={onClose}
+                className="absolute top-4 right-4 p-2 text-muted-foreground hover:text-primary transition-colors lg:hidden"
+            >
+                <X size={24} />
+            </button>
+
             {/* Registry Selector / Info */}
             <div className="px-8 mb-12">
                 <div className="section-label mb-4">Registry</div>
@@ -71,6 +83,7 @@ export default function Sidebar() {
                         <Link
                             key={item.id}
                             href={item.href}
+                            onClick={onClose}
                             className={`flex items-center gap-4 px-6 py-4 rounded-sm transition-all duration-500 group ${isActive
                                 ? "bg-secondary text-primary font-bold shadow-lg shadow-primary/5"
                                 : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"

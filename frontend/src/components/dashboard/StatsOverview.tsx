@@ -79,18 +79,18 @@ export default function StatsOverview() {
     }, []);
 
     return (
-        <section className="space-y-12">
-            <div className="flex flex-col md:flex-row justify-between items-end gap-6">
-                <div className="space-y-4">
+        <section className="space-y-8 md:space-y-12">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+                <div className="space-y-2 md:space-y-4">
                     <div className="section-label">Registry Performance</div>
-                    <h2 className="text-4xl font-serif font-bold text-foreground tracking-tight uppercase">REGISTRY OVERVIEW</h2>
+                    <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground tracking-tight uppercase leading-tight">REGISTRY OVERVIEW</h2>
                 </div>
-                <div className="flex items-center gap-4 bg-secondary/20 p-1 rounded-sm border border-border">
+                <div className="flex items-center gap-2 md:gap-4 bg-secondary/20 p-1 rounded-sm border border-border w-full md:w-auto">
                     {["7 Days", "30 Days", "ALL TIME"].map((t) => (
                         <button
                             key={t}
                             onClick={() => setActiveRange(t)}
-                            className={`px-4 py-2 text-[9px] font-bold uppercase tracking-widest transition-all ${activeRange === t ? "bg-primary text-white shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+                            className={`flex-1 md:flex-none px-3 md:px-4 py-2 text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all ${activeRange === t ? "bg-primary text-white shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
                         >
                             {t}
                         </button>
@@ -98,7 +98,7 @@ export default function StatsOverview() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                 <StatCard
                     icon={Gift}
                     label="Total Gifts"
@@ -130,25 +130,25 @@ export default function StatsOverview() {
             </div>
 
             {/* Recent Activity Mini-List */}
-            <div className="glass p-8 border-border">
-                <div className="flex justify-between items-center mb-8">
+            <div className="glass p-6 md:p-8 border-border">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
                     <h3 className="text-xs font-bold font-sans text-primary uppercase tracking-[0.3em]">Recent Activity</h3>
-                    <button className="text-[9px] font-bold text-muted-foreground hover:text-foreground transition-colors uppercase tracking-widest">View All Transaction History →</button>
+                    <button className="text-[9px] font-bold text-muted-foreground hover:text-foreground transition-colors uppercase tracking-widest text-left">View All Transaction History →</button>
                 </div>
                 <div className="space-y-4">
                     {stats.recentActivity.length > 0 ? (
                         stats.recentActivity.map((activity, i) => (
                             <div key={activity.id || i} className="flex items-center justify-between py-4 border-b border-border last:border-0 group hover:px-2 transition-all duration-500">
                                 <div className="flex items-center gap-4">
-                                    <div className="w-10 h-10 bg-secondary/50 border border-border flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all rounded-sm">
+                                    <div className="w-9 h-9 md:w-10 md:h-10 bg-secondary/50 border border-border flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all rounded-sm shrink-0">
                                         <Gift size={16} />
                                     </div>
                                     <div className="space-y-1">
                                         <p className="text-[10px] font-bold text-foreground uppercase tracking-tight">{activity.title}</p>
-                                        <p className="text-[9px] text-muted-foreground uppercase tracking-widest">{activity.description}</p>
+                                        <p className="text-[9px] text-muted-foreground uppercase tracking-widest truncate max-w-[150px] md:max-w-none">{activity.description}</p>
                                     </div>
                                 </div>
-                                <div className="text-right">
+                                <div className="text-right shrink-0 ml-4">
                                     <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">{new Date(activity.date).toLocaleDateString()}</p>
                                     <p className="text-[8px] text-primary font-bold uppercase tracking-widest mt-1">SUCCESS</p>
                                 </div>

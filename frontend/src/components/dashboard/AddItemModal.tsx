@@ -94,13 +94,13 @@ export default function AddItemModal({ isOpen, onClose, onAdd }: { isOpen: boole
                         initial={{ opacity: 0, scale: 0.95, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl bg-background border border-border shadow-2xl z-[60] overflow-hidden rounded-sm"
+                        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95vw] max-w-2xl max-h-[90vh] bg-background border border-border shadow-2xl z-[60] overflow-y-auto no-scrollbar rounded-sm"
                     >
                         {/* Header */}
-                        <div className="p-8 border-b border-border flex justify-between items-center bg-secondary/10">
+                        <div className="p-6 md:p-8 border-b border-border flex justify-between items-center bg-secondary/10 sticky top-0 z-10 backdrop-blur-md">
                             <div className="space-y-1">
-                                <h2 className="text-xl font-serif font-bold text-foreground tracking-tight uppercase">ADD NEW GIFT</h2>
-                                <p className="text-[9px] font-sans font-bold text-primary uppercase tracking-[0.3em]">ALL STORES. ONE REGISTRY.</p>
+                                <h2 className="text-lg md:text-xl font-serif font-bold text-foreground tracking-tight uppercase">ADD NEW GIFT</h2>
+                                <p className="text-[8px] md:text-[9px] font-sans font-bold text-primary uppercase tracking-[0.3em]">ALL STORES. ONE REGISTRY.</p>
                             </div>
                             <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors">
                                 <X size={24} />
@@ -108,7 +108,7 @@ export default function AddItemModal({ isOpen, onClose, onAdd }: { isOpen: boole
                         </div>
 
                         {/* Content */}
-                        <div className="p-8 lg:p-12">
+                        <div className="p-6 md:p-12">
                             <AnimatePresence mode="wait">
                                 {step === 1 ? (
                                     <motion.div
@@ -116,14 +116,14 @@ export default function AddItemModal({ isOpen, onClose, onAdd }: { isOpen: boole
                                         initial={{ opacity: 0, x: 20 }}
                                         animate={{ opacity: 1, x: 0 }}
                                         exit={{ opacity: 0, x: -20 }}
-                                        className="space-y-10"
+                                        className="space-y-8 md:space-y-10"
                                     >
-                                        <div className="space-y-6">
-                                            <div className="flex items-center gap-3 text-[10px] font-bold text-primary uppercase tracking-[0.3em]">
-                                                <Zap size={14} /> AUTO-FETCH FROM JUMIA, JIJI, OR TEMU
+                                        <div className="space-y-4 md:space-y-6">
+                                            <div className="flex items-center gap-3 text-[9px] md:text-[10px] font-bold text-primary uppercase tracking-[0.3em]">
+                                                <Zap size={14} /> AUTO-FETCH FROM JUMIA OR TEMU
                                             </div>
                                             <div className="relative">
-                                                <div className="absolute left-6 top-1/2 -translate-y-1/2 text-muted-foreground">
+                                                <div className="absolute left-4 md:left-6 top-1/2 -translate-y-1/2 text-muted-foreground">
                                                     <LinkIcon size={18} />
                                                 </div>
                                                 <input
@@ -131,28 +131,28 @@ export default function AddItemModal({ isOpen, onClose, onAdd }: { isOpen: boole
                                                     value={url}
                                                     onChange={(e) => setUrl(e.target.value)}
                                                     placeholder="PASTE PRODUCT URL HERE..."
-                                                    className="w-full bg-secondary/50 border border-border pl-16 pr-6 py-6 font-sans text-xs tracking-widest focus:ring-1 focus:ring-primary outline-none text-foreground uppercase"
+                                                    className="w-full bg-secondary/50 border border-border pl-12 md:pl-16 pr-4 md:pr-6 py-4 md:py-6 font-sans text-[10px] md:text-xs tracking-widest focus:ring-1 focus:ring-primary outline-none text-foreground uppercase"
                                                 />
                                             </div>
                                         </div>
 
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                            <div className="glass p-6 border-border space-y-4">
-                                                <Globe size={20} className="text-primary" />
-                                                <h4 className="text-[10px] font-bold text-foreground uppercase tracking-widest">Any Store</h4>
-                                                <p className="text-[9px] text-muted-foreground leading-relaxed">Paste a link from any website in the world. We'll pull the info or you can add it manually.</p>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-8">
+                                            <div className="glass p-5 md:p-6 border-border space-y-3 md:space-y-4">
+                                                <Globe size={18} className="text-primary" />
+                                                <h4 className="text-[9px] md:text-[10px] font-bold text-foreground uppercase tracking-widest">Any Store</h4>
+                                                <p className="text-[8px] md:text-[9px] text-muted-foreground leading-relaxed">Paste a link from any website in the world. We'll pull the info or you can add it manually.</p>
                                             </div>
-                                            <div className="glass p-6 border-border space-y-4">
-                                                <ShoppingBag size={20} className="text-primary" />
-                                                <h4 className="text-[10px] font-bold text-foreground uppercase tracking-widest">Browser Extension</h4>
-                                                <p className="text-[9px] text-muted-foreground leading-relaxed">Add items while you browse with our Chrome extension. One click, that's it.</p>
+                                            <div className="glass p-5 md:p-6 border-border space-y-3 md:space-y-4">
+                                                <ShoppingBag size={18} className="text-primary" />
+                                                <h4 className="text-[9px] md:text-[10px] font-bold text-foreground uppercase tracking-widest">Extension</h4>
+                                                <p className="text-[8px] md:text-[9px] text-muted-foreground leading-relaxed">Add items while you browse with our Chrome extension. One click, that's it.</p>
                                             </div>
                                         </div>
 
                                         <button
                                             onClick={handleFetch}
                                             disabled={!url || isFetching}
-                                            className="w-full bg-primary text-white py-6 font-sans font-bold text-sm uppercase tracking-[0.3em] hover:bg-foreground transition-all duration-500 disabled:opacity-50 mt-4 shadow-lg shadow-primary/10 flex items-center justify-center gap-3"
+                                            className="w-full bg-primary text-white py-4 md:py-6 font-sans font-bold text-xs md:text-sm uppercase tracking-[0.3em] hover:bg-foreground transition-all duration-500 disabled:opacity-50 mt-4 shadow-lg shadow-primary/10 flex items-center justify-center gap-3"
                                         >
                                             {isFetching ? (
                                                 <>
@@ -161,10 +161,10 @@ export default function AddItemModal({ isOpen, onClose, onAdd }: { isOpen: boole
                                                         transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                                                         className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full"
                                                     />
-                                                    FETCHING DETAILS...
+                                                    FETCHING...
                                                 </>
                                             ) : (
-                                                "FETCH GIFT DETAILS →"
+                                                "FETCH DETAILS →"
                                             )}
                                         </button>
                                     </motion.div>
@@ -174,66 +174,66 @@ export default function AddItemModal({ isOpen, onClose, onAdd }: { isOpen: boole
                                         initial={{ opacity: 0, x: 20 }}
                                         animate={{ opacity: 1, x: 0 }}
                                         exit={{ opacity: 0, x: -20 }}
-                                        className="space-y-10"
+                                        className="space-y-8 md:space-y-10"
                                     >
-                                        <div className="flex flex-col md:flex-row gap-8 items-start">
-                                            <div className="w-full md:w-48 aspect-square bg-secondary border border-border flex items-center justify-center overflow-hidden">
+                                        <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-start">
+                                            <div className="w-full md:w-48 aspect-square bg-secondary border border-border flex items-center justify-center overflow-hidden shrink-0">
                                                 {image ? (
                                                     <img src={image} alt={giftName} className="w-full h-full object-cover" />
                                                 ) : (
                                                     <ShoppingBag size={48} strokeWidth={1} className="text-primary/20" />
                                                 )}
                                             </div>
-                                            <div className="flex-1 space-y-6">
+                                            <div className="flex-1 w-full space-y-4 md:space-y-6">
                                                 <div className="space-y-2">
-                                                    <label className="text-[9px] font-bold text-primary uppercase tracking-[0.3em]">Product Name</label>
+                                                    <label className="text-[8px] md:text-[9px] font-bold text-primary uppercase tracking-[0.3em]">Product Name</label>
                                                     <input
                                                         type="text"
                                                         value={giftName}
                                                         onChange={(e) => setGiftName(e.target.value)}
-                                                        className="w-full bg-secondary/30 border border-border px-4 py-3 font-sans text-[10px] tracking-widest focus:ring-1 focus:ring-primary outline-none text-foreground uppercase"
+                                                        className="w-full bg-secondary/30 border border-border px-3 md:px-4 py-3 font-sans text-[10px] tracking-widest focus:ring-1 focus:ring-primary outline-none text-foreground uppercase"
                                                     />
                                                 </div>
-                                                <div className="grid grid-cols-2 gap-4">
+                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                                     <div className="space-y-2">
-                                                        <label className="text-[9px] font-bold text-primary uppercase tracking-[0.3em]">Estimated Price (₦)</label>
+                                                        <label className="text-[8px] md:text-[9px] font-bold text-primary uppercase tracking-[0.3em]">Price (₦)</label>
                                                         <input
                                                             type="text"
                                                             value={price}
                                                             onChange={(e) => setPrice(e.target.value)}
-                                                            className="w-full bg-secondary/30 border border-border px-4 py-3 font-sans text-[10px] tracking-widest focus:ring-1 focus:ring-primary outline-none text-foreground uppercase"
+                                                            className="w-full bg-secondary/30 border border-border px-3 md:px-4 py-3 font-sans text-[10px] tracking-widest focus:ring-1 focus:ring-primary outline-none text-foreground uppercase"
                                                         />
                                                     </div>
                                                     <div className="space-y-2">
-                                                        <label className="text-[9px] font-bold text-primary uppercase tracking-[0.3em]">Store</label>
+                                                        <label className="text-[8px] md:text-[9px] font-bold text-primary uppercase tracking-[0.3em]">Store</label>
                                                         <input
                                                             type="text"
                                                             value={store}
                                                             onChange={(e) => setStore(e.target.value)}
-                                                            className="w-full bg-secondary/30 border border-border px-4 py-3 font-sans text-[10px] tracking-widest focus:ring-1 focus:ring-primary outline-none text-foreground uppercase"
+                                                            className="w-full bg-secondary/30 border border-border px-3 md:px-4 py-3 font-sans text-[10px] tracking-widest focus:ring-1 focus:ring-primary outline-none text-foreground uppercase"
                                                         />
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div className="bg-amber-500/10 p-6 border border-amber-500/20 flex gap-4">
+                                        <div className="bg-amber-500/10 p-4 md:p-6 border border-amber-500/20 flex gap-4">
                                             <AlertCircle className="text-amber-500 shrink-0" size={18} />
-                                            <p className="text-[9px] text-amber-500/80 font-bold uppercase tracking-widest leading-relaxed">
+                                            <p className="text-[8px] md:text-[9px] text-amber-500/80 font-bold uppercase tracking-widest leading-relaxed">
                                                 Note: Guests will be redirected to the store to complete the purchase. You can also enable 'Direct Fund' to receive cash instead.
                                             </p>
                                         </div>
 
-                                        <div className="flex gap-4 pt-4">
+                                        <div className="flex flex-col sm:flex-row gap-3 md:gap-4 pt-4">
                                             <button
                                                 onClick={() => setStep(1)}
-                                                className="flex-1 border border-border text-foreground py-5 font-sans font-bold text-xs uppercase tracking-[0.2em] hover:bg-secondary/50 transition-colors"
+                                                className="flex-1 border border-border text-foreground py-4 md:py-5 font-sans font-bold text-[10px] md:text-xs uppercase tracking-[0.2em] hover:bg-secondary/50 transition-colors order-2 sm:order-1"
                                             >
                                                 BACK
                                             </button>
                                             <button
                                                 onClick={handleConfirm}
-                                                className="flex-[2] bg-primary text-white py-5 font-sans font-bold text-xs uppercase tracking-[0.2em] hover:bg-foreground transition-all duration-500 shadow-lg shadow-primary/10"
+                                                className="flex-[2] bg-primary text-white py-4 md:py-5 font-sans font-bold text-[10px] md:text-xs uppercase tracking-[0.2em] hover:bg-foreground transition-all duration-500 shadow-lg shadow-primary/10 order-1 sm:order-2"
                                             >
                                                 CONFIRM & ADD TO LIST
                                             </button>
