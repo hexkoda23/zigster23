@@ -73,6 +73,8 @@ export default function GiftList() {
     const [partPayGift, setPartPayGift] = useState<any | null>(null);
     const [bankDetails, setBankDetails] = useState<any>(null);
 
+    const [registrySlug, setRegistrySlug] = useState("your-registry");
+
     useEffect(() => {
         const fetchGifts = () => {
             const giftsRaw = localStorage.getItem("zigster_gifts");
@@ -83,6 +85,10 @@ export default function GiftList() {
             if (regRaw) {
                 const reg = JSON.parse(regRaw);
                 if (reg.bankDetails) setBankDetails(reg.bankDetails);
+
+                // Set the slug here
+                const slug = (reg.title || "registry").toLowerCase().replace(/\s+/g, "-");
+                setRegistrySlug(slug);
             }
         };
         fetchGifts();
@@ -94,13 +100,6 @@ export default function GiftList() {
             window.removeEventListener("registryUpdate", fetchGifts);
         };
     }, []);
-
-    const registrySlug = (() => {
-        const reg = localStorage.getItem("zigster_registry");
-        if (!reg) return "your-registry";
-        const d = JSON.parse(reg);
-        return (d.title || "registry").toLowerCase().replace(/\s+/g, "-");
-    })();
 
     const copyGiftLink = (giftId: string) => {
         const url = `https://zigister23.com/registry/${registrySlug}#gift-${giftId}`;
