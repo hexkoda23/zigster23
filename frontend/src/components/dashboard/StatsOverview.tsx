@@ -3,10 +3,11 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Gift, Wallet, ShoppingCart, Eye, TrendingUp, ArrowUpRight } from "lucide-react";
+import Link from "next/link";
 
-const StatCard = ({ icon: Icon, label, value, trend, subtext }: { icon: any; label: string; value: string; trend?: string; subtext: string }) => {
+const StatCard = ({ icon: Icon, label, value, trend, subtext, href }: { icon: any; label: string; value: string; trend?: string; subtext: string; href: string; }) => {
     return (
-        <div className="glass p-8 border-border group hover:border-primary/30 transition-all duration-500">
+        <Link href={href} className="glass p-8 border-border group hover:border-primary/30 transition-all duration-500 block cursor-pointer">
             <div className="flex justify-between items-start mb-6">
                 <div className="w-12 h-12 bg-secondary/50 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-500 rounded-sm shadow-inner">
                     <Icon size={20} />
@@ -22,12 +23,12 @@ const StatCard = ({ icon: Icon, label, value, trend, subtext }: { icon: any; lab
                 <h3 className="text-3xl font-serif font-bold text-foreground tracking-tight">{value}</h3>
             </div>
             <div className="mt-6 pt-6 border-t border-border flex items-center justify-between">
-                <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">{subtext}</span>
-                <button className="text-primary hover:text-foreground transition-colors">
+                <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest group-hover:text-foreground transition-colors">{subtext}</span>
+                <span className="text-primary group-hover:text-foreground transition-colors">
                     <ArrowUpRight size={14} />
-                </button>
+                </span>
             </div>
-        </div>
+        </Link>
     );
 };
 
@@ -104,28 +105,32 @@ export default function StatsOverview() {
                     label="Total Gifts"
                     value={stats.totalGifts.toString()}
                     trend="+0%"
-                    subtext={`Added from ${stats.totalGifts > 0 ? "your list" : "no stores yet"}`}
+                    subtext={`ADDED FROM ${stats.totalGifts > 0 ? "YOUR LIST" : "NO STORES YET"}`}
+                    href="/dashboard/gifts"
                 />
                 <StatCard
                     icon={Wallet}
                     label="Cash Funds"
                     value={stats.cashFunds}
                     trend="+0%"
-                    subtext="Start a fund to see contributors"
+                    subtext="START A FUND TO SEE CONTRIBUTORS"
+                    href="/dashboard/cash-funds"
                 />
                 <StatCard
                     icon={ShoppingCart}
                     label="Purchased"
                     value={stats.purchased.toString()}
                     trend="+0%"
-                    subtext="Track guest purchases here"
+                    subtext="TRACK GUEST PURCHASES HERE"
+                    href="/dashboard/purchases"
                 />
                 <StatCard
                     icon={Eye}
                     label="Registry Views"
                     value={stats.views}
                     trend="+0%"
-                    subtext="Share your link to get views"
+                    subtext="SHARE YOUR LINK TO GET VIEWS"
+                    href="/dashboard/share"
                 />
             </div>
 
@@ -133,7 +138,7 @@ export default function StatsOverview() {
             <div className="glass p-6 md:p-8 border-border">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
                     <h3 className="text-xs font-bold font-sans text-primary uppercase tracking-[0.3em]">Recent Activity</h3>
-                    <button className="text-[9px] font-bold text-muted-foreground hover:text-foreground transition-colors uppercase tracking-widest text-left">View All Transaction History →</button>
+                    <Link href="/dashboard/purchases" className="text-[9px] font-bold text-muted-foreground hover:text-foreground transition-colors uppercase tracking-widest text-left">View All Transaction History →</Link>
                 </div>
                 <div className="space-y-4">
                     {stats.recentActivity.length > 0 ? (
@@ -159,10 +164,13 @@ export default function StatsOverview() {
                             <div className="w-16 h-16 bg-secondary/30 rounded-full flex items-center justify-center text-primary/20 mx-auto">
                                 <TrendingUp size={32} />
                             </div>
-                            <div className="space-y-1">
+                            <div className="space-y-1 mb-4">
                                 <p className="text-sm font-serif font-bold text-foreground uppercase tracking-tight">No Activity Yet</p>
-                                <p className="text-[10px] text-muted-foreground uppercase tracking-widest max-w-xs mx-auto">Share your registry to start seeing guest interactions here.</p>
+                                <p className="text-[10px] text-muted-foreground uppercase tracking-widest max-w-xs mx-auto mb-2">Share your registry to start seeing guest interactions here.</p>
                             </div>
+                            <Link href="/dashboard/share" className="inline-block border border-border px-6 py-2 text-[10px] font-bold text-foreground uppercase tracking-widest hover:bg-primary hover:border-primary hover:text-white transition-all">
+                                SHARE REGISTRY
+                            </Link>
                         </div>
                     )}
                 </div>

@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { Search, Calendar, MapPin, ArrowRight, User } from "lucide-react";
+import { Search, Calendar, MapPin, ArrowRight, User, AlertCircle } from "lucide-react";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 const RegistryResultCard = ({ name, type, date, location }: any) => (
     <motion.div
@@ -32,6 +33,32 @@ const RegistryResultCard = ({ name, type, date, location }: any) => (
 
 export default function FindRegistryPage() {
     const [search, setSearch] = useState("");
+    const [error, setError] = useState("");
+    const router = useRouter();
+
+    const handleSearch = () => {
+        setError("");
+
+        if (!search.trim()) {
+            setError("Please enter a registry link.");
+            return;
+        }
+
+        try {
+            const url = new URL(search);
+            // Valid URL, try to route or open directly
+            window.location.href = url.href;
+        } catch {
+            // Check if it's a relative path e.g., zigister23.com/registry/slug
+            if (search.includes("/registry/")) {
+                const path = search.substring(search.indexOf("/registry/"));
+                router.push(path);
+                return;
+            }
+
+            setError("Warning: Not a valid link. Please paste a valid registry link to view it.");
+        }
+    };
 
     return (
         <main className="min-h-screen bg-background pt-32 pb-24">
@@ -48,20 +75,32 @@ export default function FindRegistryPage() {
                 </div>
 
                 {/* Search Bar */}
-                <div className="glass p-2 border-white/10 shadow-2xl shadow-gold/5 max-w-3xl mx-auto flex flex-col md:flex-row gap-2">
-                    <div className="flex-1 flex items-center px-6 gap-4 bg-secondary">
-                        <Search size={20} className="text-gold" />
-                        <input
-                            type="text"
-                            placeholder="ENTER FIRST OR LAST NAME..."
-                            className="w-full py-6 bg-transparent border-none outline-none text-xs font-bold uppercase tracking-widest text-white placeholder:text-white/20"
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                        />
+                <div className="space-y-4">
+                    {error && (
+                        <div className="bg-red-500/10 border border-red-500/20 px-6 py-4 flex items-center gap-4 text-red-500 max-w-3xl mx-auto">
+                            <AlertCircle size={20} />
+                            <p className="text-[10px] font-bold uppercase tracking-widest">{error}</p>
+                        </div>
+                    )}
+                    <div className="glass p-2 border-white/10 shadow-2xl shadow-gold/5 max-w-3xl mx-auto flex flex-col md:flex-row gap-2">
+                        <div className="flex-1 flex items-center px-6 gap-4 bg-secondary">
+                            <Search size={20} className="text-gold" />
+                            <input
+                                type="text"
+                                placeholder="PASTE A REGISTRY LINK HERE..."
+                                className="w-full py-6 bg-transparent border-none outline-none text-xs font-bold uppercase tracking-widest text-white placeholder:text-white/20"
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                            />
+                        </div>
+                        <button
+                            onClick={handleSearch}
+                            className="bg-gold text-background px-12 py-6 font-sans font-bold text-xs uppercase tracking-[0.3em] hover:bg-white transition-all duration-500"
+                        >
+                            SEARCH
+                        </button>
                     </div>
-                    <button className="bg-gold text-background px-12 py-6 font-sans font-bold text-xs uppercase tracking-[0.3em] hover:bg-white transition-all duration-500">
-                        SEARCH
-                    </button>
                 </div>
 
                 {/* Results / Empty State */}

@@ -5,6 +5,8 @@ import StatsOverview from "@/components/dashboard/StatsOverview";
 import AddItemModal from "@/components/dashboard/AddItemModal";
 import GiftList from "@/components/dashboard/GiftList";
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { ExternalLink } from "lucide-react";
 
 export default function DashboardPage() {
     const [userData, setUserData] = useState<any>(null);
@@ -31,13 +33,13 @@ export default function DashboardPage() {
                         <p className="text-muted-foreground font-sans text-xs uppercase tracking-[0.3em]">WELCOME BACK, {ownerName}. HERE'S YOUR REGISTRY SUMMARY.</p>
                     </div>
                     <div className="flex items-center gap-4">
-                        <a
-                            href={registryData?.username ? `/registry/${registryData.username}` : (registryData?.title ? `/registry/${registryData.title.toLowerCase().replace(/\s+/g, '-')}` : '#')}
+                        <Link
+                            href={registryData?.username ? `/registry/${registryData.username}` : `/registry/${registryData?.title?.toLowerCase().replace(/\s+/g, '-') || 'demo'}`}
                             target="_blank"
                             className="border border-primary/20 px-6 py-4 font-sans font-bold text-[10px] uppercase tracking-widest text-primary hover:bg-primary hover:text-white transition-all duration-500"
                         >
                             VIEW PUBLIC REGISTRY
-                        </a>
+                        </Link>
                         <button
                             onClick={() => setIsModalOpen(true)}
                             className="bg-primary text-white px-6 py-4 font-sans font-bold text-[10px] uppercase tracking-widest hover:bg-foreground transition-all duration-500 shadow-lg shadow-primary/10"

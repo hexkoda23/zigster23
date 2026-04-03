@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Step1_Occasion from "./steps/Step1_Occasion";
@@ -13,26 +13,34 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 const RegistryWizard = () => {
     const router = useRouter();
     const [step, setStep] = useState(1);
-    const [formData, setFormData] = useState(() => {
-        const user = typeof window !== 'undefined' ? localStorage.getItem("zigster_user") : null;
-        const userData = user ? JSON.parse(user) : {};
-        return {
-            occasion: "",
-            title: "",
-            date: "",
-            location: "",
-            ownerName: userData.name || "",
-            email: userData.email || "",
-            greeting: "",
-            privacy: "link-only",
-            bankDetails: {
-                bankName: "",
-                accountNumber: "",
-                accountName: ""
-            },
-            address: "",
-        };
+    const [formData, setFormData] = useState({
+        occasion: "",
+        title: "",
+        date: "",
+        location: "",
+        ownerName: "",
+        email: "",
+        greeting: "",
+        privacy: "link-only",
+        bankDetails: {
+            bankName: "",
+            accountNumber: "",
+            accountName: ""
+        },
+        address: "",
     });
+
+    useEffect(() => {
+        const user = localStorage.getItem("zigster_user");
+        if (user) {
+            const userData = JSON.parse(user);
+            setFormData(prev => ({
+                ...prev,
+                ownerName: userData.name || "",
+                email: userData.email || ""
+            }));
+        }
+    }, []);
 
     const updateFormData = (fields: any) => {
         setFormData((prev) => ({ ...prev, ...fields }));
